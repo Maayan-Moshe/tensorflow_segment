@@ -665,7 +665,8 @@ def add_optimizer(train_logits, tf_train_labels, hyperparams):
 
 # In[9]:
 
-def train_model(graph_elements, hyperparams, valid_labels, test_labels):
+def train_model(graph_elements, hyperparams, train_dataset, train_labels, \
+                            valid_labels, test_labels):
 
     graph = graph_elements['graph']
     tf_train_dataset = graph_elements['tf_train_dataset']
@@ -786,14 +787,16 @@ def visualize_learning_curves(plot_steps, train_loss_vals, train_accuracy_list, 
 
 # In[10]:
 
-def run_model(hyperparams, valid_dataset, test_dataset, valid_labels, test_labels):
+def run_model(hyperparams, train_dataset, train_labels, valid_dataset, \
+                valid_labels, test_dataset, test_labels):
     print_params(hyperparams)
     
     # build graph flow model
     graph_elements = build_model(hyperparams, valid_dataset, test_dataset)
 
     # run graph flow model 
-    run_res = train_model(graph_elements, hyperparams, valid_labels, test_labels)       
+    run_res = train_model(graph_elements, hyperparams, train_dataset, train_labels, \
+                                            valid_labels, test_labels)       
     train_accuracy, valid_accuracy, test_accuracy, train_loss = run_res
        
     # report final results
@@ -865,11 +868,9 @@ def cross_validation_for_param(cv_param_name, cv_param_values, hyperparams,
     
     return [param_val, valid_loss, valid_accuracy]
 
-
-
-
-def main():
-    train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels  = load_data()
+def main(path):
+    train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, \
+            test_labels  = load_data(path)
     
     train_dataset, train_labels = reformat(train_dataset, train_labels)
     valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
@@ -882,7 +883,10 @@ def main():
     # Test trials
     hyperparams = get_default_params()
     hyperparams['num_steps'] = 10001
-    run_model(hyperparams, valid_dataset, test_dataset, valid_labels, test_labels)
+    run_model(hyperparams, train_dataset, train_labels, valid_dataset,  \
+                    valid_labels, test_dataset, test_labels)
 
-
+if __name__ == '__main__':
+    path = '/media/sf_teeth_segmentation/notMNIST.pickle'
+    main(path)
 
