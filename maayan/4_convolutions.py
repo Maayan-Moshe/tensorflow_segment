@@ -47,8 +47,6 @@ def load_data(pickle_file = 'notMNIST.pickle'):
 # - convolutions need the image data formatted as a cube (width by height by #channels)
 # - labels as float 1-hot encodings.
 
-# In[4]:
-
 image_size = 28
 num_labels = 10
 num_channels = 1 # grayscale
@@ -66,172 +64,8 @@ def reformat(dataset, labels):
 
 # Let's build a small network with two convolutional layers, followed by one fully connected layer. Convolutional networks are more expensive computationally, so we'll limit its depth and number of fully connected nodes.
 
-# Different parameters sets
-# ---
-
-# In[5]:
-
-def get_default_params():
-    # define hyperparameters
-    hyperparams = dict()
-    hyperparams['image_size'] = 28 # input layer
-    hyperparams['num_channels'] = 1 # input layer
-    hyperparams['num_labels'] = 10 # output layer
-    num_labels = hyperparams['num_labels']
-    hyperparams['layers_info'] = [{'type': 'conv', 'kernel_width' : 5, 'depth': 16, 'stride': 2, 'padding' : 'SAME'}, 
-                                  {'type': 'conv', 'kernel_width' : 5, 'depth': 16, 'stride': 2, 'padding' : 'SAME'}, 
-                                  {'type': 'fc', 'depth': 64},
-                                  {'type': 'fc', 'depth': num_labels}]
-    
-    hyperparams['weight_stddev'] = 0.1
-    hyperparams['bias_init_val'] = 0.0
-    hyperparams['activation_func'] = 'relu'
-    
-    hyperparams['optimizer_alg_name'] = 'GradientDescentOptimizer'
-    hyperparams['momentum_term'] = 0
-    hyperparams['learning_rate'] = 0.05
-    hyperparams['learning_decay_rate'] = 1.0 
-    hyperparams['learning_decay_steps'] =1000
-    hyperparams['dropout_keep_prob'] = 1.0  
-
-    hyperparams['batch_size'] = 16
-    hyperparams['max_num_samples'] = -1 # all
-    
-    hyperparams['num_steps'] = 1001 
-    hyperparams['num_logs'] = 30
-    
-    return hyperparams
-    
-    
-def get_optimal_params():
-    # define hyperparameters
-    hyperparams = dict()
-    hyperparams['image_size'] = 28 # input layer
-    hyperparams['num_channels'] = 1 # input layer
-    hyperparams['num_labels'] = 10 # output layer
-    num_labels = hyperparams['num_labels']
-    hyperparams['layers_info'] = [{'type': 'conv', 'kernel_width' : 5, 'depth': 16, 'stride': 1, 'padding' : 'SAME'}, 
-                                 {'type': 'pool', 'kernel_width' : 2, 'stride' : 2, 'padding' : 'SAME', 'pool_type' : 'maxpool'},  
-                                 {'type': 'conv', 'kernel_width' : 5, 'depth': 16, 'stride': 1, 'padding' : 'SAME'}, 
-                                 {'type': 'pool', 'kernel_width' : 2, 'stride' : 2, 'padding' : 'SAME', 'pool_type' : 'maxpool'}, 
-                                 {'type': 'fc', 'depth': 64},
-                                 {'type': 'fc', 'depth': num_labels}]
-    
-    hyperparams['weight_stddev'] = 0.1
-    hyperparams['bias_init_val'] = 0.0
-    hyperparams['activation_func'] = 'elu'
-    
-    hyperparams['optimizer_alg_name'] = 'GradientDescentOptimizer'
-    hyperparams['momentum_term'] = 0.9
-    hyperparams['learning_rate'] = 0.05
-    hyperparams['learning_decay_rate'] = 0.98 
-    hyperparams['learning_decay_steps'] =1000
-    hyperparams['dropout_keep_prob'] = 1.0 
-
-    hyperparams['batch_size'] = 64
-    hyperparams['max_num_samples'] = -1 # all
-    
-    hyperparams['num_steps'] = 5001    
-    hyperparams['num_logs'] = 50
-    
-    return hyperparams
-
-
-def get_lenet_params():
-    # define hyperparameters
-    hyperparams = dict()
-    hyperparams['image_size'] = 28 # input layer
-    hyperparams['num_channels'] = 1 # input layer
-    hyperparams['num_labels'] = 10 # output layer
-    num_labels = hyperparams['num_labels']
-    hyperparams['layers_info'] = [{'type': 'conv', 'kernel_width' : 5, 'depth': 8, 'stride': 1, 'padding' : 'SAME'}, 
-                                 {'type': 'pool', 'kernel_width' : 2, 'stride' : 2, 'padding' : 'SAME', 'pool_type' : 'maxpool'},  
-                                 {'type': 'conv', 'kernel_width' : 5, 'depth': 32, 'stride': 1, 'padding' : 'SAME'}, 
-                                 {'type': 'pool', 'kernel_width' : 2, 'stride' : 2, 'padding' : 'SAME', 'pool_type' : 'maxpool'}, 
-                                 {'type': 'conv', 'kernel_width' : 5, 'depth': 64, 'stride': 1, 'padding' : 'SAME'}, 
-                                 {'type': 'fc', 'depth': 128},
-                                 {'type': 'fc', 'depth': 84},
-                                 {'type': 'fc', 'depth': num_labels}]
-    
-    hyperparams['weight_stddev'] = 0.1
-    hyperparams['bias_init_val'] = 0.0
-    hyperparams['activation_func'] = 'elu'
-    
-    hyperparams['optimizer_alg_name'] = 'GradientDescentOptimizer'
-    hyperparams['momentum_term'] = 0.0
-    hyperparams['learning_rate'] = 0.1
-    hyperparams['learning_decay_rate'] = 0.95 
-    hyperparams['learning_decay_steps'] = 1000
-    hyperparams['dropout_keep_prob'] = 0.7
-
-    hyperparams['batch_size'] = 64
-    hyperparams['max_num_samples'] = -1 # all
-    
-    hyperparams['num_steps'] = 50001    
-    hyperparams['num_logs'] = 50
-    
-    return hyperparams
-    
-    
-def get_inception_params():
-    # define hyperparameters
-    hyperparams = dict()
-    hyperparams['image_size'] = 28 # input layer
-    hyperparams['num_channels'] = 1 # input layer
-    hyperparams['num_labels'] = 10 # output layer
-    num_labels = hyperparams['num_labels']
-    hyperparams['layers_info'] = [
-        {'type': 'conv', 'kernel_width' : 5, 'depth': 16, 'stride': 1, 'padding' : 'SAME'}, 
-        {'type': 'pool', 'kernel_width' : 2, 'stride' : 2, 'padding' : 'SAME', 'pool_type' : 'maxpool'}, 
-        {'type': 'conv', 'kernel_width' : 5, 'depth': 32, 'stride': 1, 'padding' : 'SAME'}, 
-        {'type': 'inception', '1x1':12, '3x3_reduced':10, '3x3':20, '5x5_reduced':4, '5x5':10, 'pool_reduced':6}, 
-        {'type': 'inception', '1x1':12, '3x3_reduced':12, '3x3':24, '5x5_reduced':4, '5x5':12, 'pool_reduced':8}, 
-        {'type': 'pool', 'kernel_width' : 2, 'stride' : 2, 'padding' : 'SAME', 'pool_type' : 'maxpool'}, 
-        {'type': 'inception', '1x1':16, '3x3_reduced':14, '3x3':28, '5x5_reduced':4, '5x5':12, 'pool_reduced':8}, 
-        {'type': 'inception', '1x1':24, '3x3_reduced':20, '3x3':40, '5x5_reduced':12, '5x5':20, 'pool_reduced':12},
-        {'type': 'inception', '1x1':32, '3x3_reduced':20, '3x3':56, '5x5_reduced':16, '5x5':24, 'pool_reduced':16},        
-        {'type': 'pool', 'kernel_width' : 7, 'stride' : 1, 'padding' : 'VALID', 'pool_type' : 'avgpool'}, 
-        {'type': 'fc', 'depth': num_labels}]
-    
-    hyperparams['weight_stddev'] = -1 # will calculate optimal stdev
-    hyperparams['bias_init_val'] = 0.01
-    hyperparams['activation_func'] = 'elu'
-                
-    #GradientDescentOptimizer, MomentumOptimizer, AdagradOptimizer, AdamOptimizer
-    hyperparams['optimizer_alg_name'] = 'GradientDescentOptimizer'
-    hyperparams['momentum_term'] = 0.8
-    hyperparams['learning_rate'] = 0.1
-    hyperparams['learning_decay_rate'] = 0.95 
-    hyperparams['learning_decay_steps'] = 1000
-    hyperparams['dropout_keep_prob'] = 0.7
-
-    hyperparams['batch_size'] = 128
-    hyperparams['max_num_samples'] = -1 # all
-
-    hyperparams['num_full_epochs'] = 20        
-    hyperparams['num_steps'] = 50001 # if num_full_epochs is defined then num_steps = num_full_epochs* num_sampled /batch_size  
-    hyperparams['num_logs'] = hyperparams['num_full_epochs'] 
-    
-    return hyperparams    
- 
-    
-def print_params(hyperparams):
-    print('----Hyperparameters----')
-    for param_name in hyperparams.keys():
-        value = hyperparams[param_name]
-        if type(value) is list:
-            print('%s values:' % param_name)
-            for i, val in enumerate(value):
-                print('%d: %s' % (i+1, val))
-        else:
-            print(param_name, value)
-    print('-----------------------')
-
-
 # Classes definitions for different layer types
 # ---
-
-# In[6]:
 
 def create_layer_module(layer_info, data_shape, activation_func):
     # class factory
@@ -248,7 +82,6 @@ def create_layer_module(layer_info, data_shape, activation_func):
         layer_obj = fc_layer(layer_info, data_shape, activation_func)  
         
     return layer_obj
-
 
 #---------------------------------------------------------------------------
 
@@ -308,11 +141,7 @@ class conv_layer(layer_module_base):
         out_w = calc_filtered_image_size(w, self.filter_size, self.stride, self.padding)
         return [out_h, out_w, self.depth]  
     
-
-
-
 #---------------------------------------------------------------------------
-
 
 class fc_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
@@ -349,11 +178,9 @@ class fc_layer(layer_module_base):
         size = calc_flat_size(shape[1:])
         data = tf.reshape(data, [batch, size])
         return data
-
-    
+   
 #---------------------------------------------------------------------------    
-
-    
+  
 class pooling_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'maxpool'):
         layer_module_base.__init__(self, params, data_shape, activation_func) 
@@ -375,12 +202,10 @@ class pooling_layer(layer_module_base):
         h, w, depth = self.data_shape
         out_h = calc_filtered_image_size(h, self.filter_size, self.stride, self.padding)
         out_w = calc_filtered_image_size(w, self.filter_size, self.stride, self.padding)
-        return [out_h, out_w, depth]         
-    
+        return [out_h, out_w, depth]            
         
 #---------------------------------------------------------------------------        
-        
-    
+           
 class inception_module(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
         layer_module_base.__init__(self, params, data_shape, activation_func)  
@@ -867,8 +692,16 @@ def cross_validation_for_param(cv_param_name, cv_param_values, hyperparams,
     print('train_loss, %f, valid_loss %f' % (train_loss, valid_loss))
     
     return [param_val, valid_loss, valid_accuracy]
+    
+def load_from_json(path):
+    
+    import json
+    params = None
+    with open(path) as in_f:
+        params = json.load(in_f)
+    return params
 
-def main(path):
+def main(path, params_path):
     train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, \
             test_labels  = load_data(path)
     
@@ -881,12 +714,12 @@ def main(path):
     print('Test set', test_dataset.shape, test_labels.shape)
 
     # Test trials
-    hyperparams = get_default_params()
-    hyperparams['num_steps'] = 10001
+    hyperparams = load_from_json(params_path)
     run_model(hyperparams, train_dataset, train_labels, valid_dataset,  \
                     valid_labels, test_dataset, test_labels)
 
 if __name__ == '__main__':
+    params_path = '/media/sf_teeth_segmentation/tensorflow_segment/optimal_sett.json'
     path = '/media/sf_teeth_segmentation/notMNIST.pickle'
-    main(path)
+#    main(path, params_path)
 

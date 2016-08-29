@@ -1,0 +1,42 @@
+{
+  "dropout_keep_prob": 1.0,
+  "momentum_term": 0,
+  "layers_info": [
+    {
+      "type": "conv",
+      "depth": 16,
+      "kernel_width": 5,
+      "padding": "SAME",
+      "stride": 2
+    },
+    {
+      "type": "conv",
+      "depth": 16,
+      "kernel_width": 5,
+      "padding": "SAME",
+      "stride": 2
+    },
+    {
+      "type": "fc",
+      "depth": 64
+    },
+    {
+      "type": "fc",
+      "depth": 10
+    }
+  ],
+  "batch_size": 16,
+  "max_num_samples": -1,
+  "num_labels": 10,
+  "learning_decay_steps": 1000,
+  "weight_stddev": 0.1,
+  "optimizer_alg_name": "GradientDescentOptimizer",
+  "image_size": 28,
+  "num_channels": 1,
+  "activation_func": "relu",
+  "learning_rate": 0.05,
+  "num_steps": 1001,
+  "num_logs": 30,
+  "bias_init_val": 0.0,
+  "learning_decay_rate": 1.0
+}
