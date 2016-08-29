@@ -35,32 +35,12 @@ def load_data(pickle_file = 'notMNIST.pickle'):
         
         return train_dataset, train_labels, valid_dataset, valid_labels, valid_dataset, valid_labels 
 
-
-# Reformat into a TensorFlow-friendly shape:
-# - convolutions need the image data formatted as a cube (width by height by #channels)
-# - labels as float 1-hot encodings.
-
-image_size = 28
-num_labels = 10
-num_channels = 1 # grayscale
-
-def convert_labels_to_onehot_vectors(labels):
-    # Map 2 to [0.0, 1.0, 0.0 ...], 3 to [0.0, 0.0, 1.0 ...]
-    label_classes = np.arange(num_labels)
-    labels = (label_classes == labels[:,None]).astype(np.float32)    
-    return labels
-
-def reformat(dataset, labels):
-    dataset = dataset.reshape((-1, image_size, image_size, num_channels)).astype(np.float32)
-    labels = convert_labels_to_onehot_vectors(labels)
-    return dataset, labels
-
 # Let's build a small network with two convolutional layers, followed by one fully connected layer. Convolutional networks are more expensive computationally, so we'll limit its depth and number of fully connected nodes.
 
-# Building computational graph model functionality
-# ---
-
-def build_model(hyperparams, valid_dataset, test_dataset):    
+def build_model(hyperparams, valid_dataset, test_dataset):
+    '''
+    Building computational graph model functionality
+    '''    
     batch_size = hyperparams['batch_size']
     image_size = hyperparams['image_size']
     num_channels = hyperparams['num_channels']
@@ -389,18 +369,19 @@ def load_from_json(path):
 def main(path, params_path):
     train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, \
             test_labels  = load_data(path)
+            
+    params = load_from_json(params_path)
     
-    train_dataset, train_labels = reformat(train_dataset, train_labels)
-    valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
-    test_dataset, test_labels = reformat(test_dataset, test_labels)
+    train_dataset, train_labels = utils.reformat(train_dataset, train_labels, params)
+    valid_dataset, valid_labels = utils.reformat(valid_dataset, valid_labels, params)
+    test_dataset, test_labels = utils.reformat(test_dataset, test_labels, params)
     
     print('Training set', train_dataset.shape, train_labels.shape)
     print('Validation set', valid_dataset.shape, valid_labels.shape)
     print('Test set', test_dataset.shape, test_labels.shape)
 
     # Test trials
-    hyperparams = load_from_json(params_path)
-    run_model(hyperparams, train_dataset, train_labels, valid_dataset,  \
+    run_model(params, train_dataset, train_labels, valid_dataset,  \
                     valid_labels, test_dataset, test_labels)
 
 if __name__ == '__main__':

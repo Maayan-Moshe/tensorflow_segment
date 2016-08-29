@@ -59,3 +59,23 @@ def calc_flat_size(shape):
 def accuracy(predictions, labels):
     num_samples = predictions.shape[0]
     return (100.0 * np.sum(np.argmax(predictions, 1) == np.argmax(labels, 1)) / num_samples)
+    
+def reformat(dataset, labels, params):
+    ''' 
+    Reformat into a TensorFlow-friendly shape:
+    convolutions need the image data formatted as a cube (width by height by #channels)
+    labels as float 1-hot encodings.
+    '''
+    img_size = params['image_size']
+    num_chan = params['num_channels']
+    dataset = dataset.reshape((-1, img_size, img_size, num_chan)).astype(np.float32)
+    labels = convert_labels_to_onehot_vectors(labels, params['num_labels'])
+    return dataset, labels
+    
+def convert_labels_to_onehot_vectors(labels, num_labels):
+    '''
+    Map 2 to [0.0, 1.0, 0.0 ...], 3 to [0.0, 0.0, 1.0 ...]
+    '''
+    label_classes = np.arange(num_labels)
+    labels = (label_classes == labels[:,None]).astype(np.float32)    
+    return labels
