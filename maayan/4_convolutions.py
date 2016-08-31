@@ -267,7 +267,7 @@ def main(path, params_path):
                     valid_labels, test_dataset, test_labels)
 
 if __name__ == '__main__':
-    params_path = '/media/sf_teeth_segmentation/tensorflow_segment/default_sett.json'
+    params_path = '/media/sf_teeth_segmentation/tensorflow_segment/optimal_sett.json'
     path = '/media/sf_teeth_segmentation/notMNIST.pickle'
     main(path, params_path)
 
