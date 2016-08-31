@@ -118,7 +118,7 @@ class ModelTrainer:
     def test(self, test_labels):
         '''calc test utils.accuracy'''
         
-        test_accuracy = utils.accuracy(self.test_prediction.eval(feed_dict = {self.tf_dropout_keep_prob:1.0}), self.test_labels)
+        test_accuracy = utils.accuracy(self.test_prediction.eval(feed_dict = {self.tf_dropout_keep_prob:1.0}), test_labels)
         return test_accuracy
     
 def visualize_learning_curves(plot_steps, train_loss_vals, train_accuracy_list, validation_accuracy_list):
