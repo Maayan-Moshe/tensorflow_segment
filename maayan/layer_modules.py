@@ -2,6 +2,8 @@
 
 import utils
 import tensorflow as tf
+import numpy as np
+
 
 def create_layer_module(layer_info, data_shape, activation_func):
     ''' class factory '''
@@ -18,6 +20,8 @@ def create_layer_module(layer_info, data_shape, activation_func):
         layer_obj = fc_layer(layer_info, data_shape, activation_func)  
         
     return layer_obj
+ 
+ 
  
 class layer_module_base:    
     def __init__(self, params, data_shape, activation_func = 'relu'): 
@@ -42,6 +46,7 @@ class layer_module_base:
     
     def calc_num_input_nodes(self):
         return 0
+        
    
 class conv_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
@@ -56,7 +61,7 @@ class conv_layer(layer_module_base):
                 
     def eval(self, data, dropout_keep_prob=1.0): 
         logits = utils.conv2d(data, self.weights, stride=self.stride , padding=self.padding) + self.biases
-        activations = utils.activate(logits, self.activation_func)
+        activations = utils.activate(logits, self.activation_func)   
         return activations
     
     def calc_params_count(self):
@@ -71,6 +76,8 @@ class conv_layer(layer_module_base):
         out_h = utils.calc_filtered_image_size(h, self.filter_size, self.stride, self.padding)
         out_w = utils.calc_filtered_image_size(w, self.filter_size, self.stride, self.padding)
         return [out_h, out_w, self.depth]  
+
+
 
 class fc_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
@@ -108,6 +115,8 @@ class fc_layer(layer_module_base):
         data = tf.reshape(data, [batch, size])
         return data
  
+ 
+ 
 class pooling_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'maxpool'):
         layer_module_base.__init__(self, params, data_shape, activation_func) 
@@ -130,7 +139,9 @@ class pooling_layer(layer_module_base):
         out_h = utils.calc_filtered_image_size(h, self.filter_size, self.stride, self.padding)
         out_w = utils.calc_filtered_image_size(w, self.filter_size, self.stride, self.padding)
         return [out_h, out_w, depth]            
-                
+        
+
+        
 class inception_module(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
         ''' params is a dictionary of the following structure:
