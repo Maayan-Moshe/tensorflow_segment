@@ -2,9 +2,9 @@
 
 import utils
 import tensorflow as tf
-import numpy as np
 
 
+# In[1]:
 def create_layer_module(layer_info, data_shape, activation_func):
     ''' class factory '''
     layer_obj = None             
@@ -22,7 +22,7 @@ def create_layer_module(layer_info, data_shape, activation_func):
     return layer_obj
  
  
- 
+ # In[1]:
 class layer_module_base:    
     def __init__(self, params, data_shape, activation_func = 'relu'): 
         self.activation_func = activation_func
@@ -46,8 +46,9 @@ class layer_module_base:
     
     def calc_num_input_nodes(self):
         return 0
-        
-   
+       
+       
+# In[1]:   
 class conv_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
         layer_module_base.__init__(self, params, data_shape, activation_func)
@@ -78,7 +79,7 @@ class conv_layer(layer_module_base):
         return [out_h, out_w, self.depth]  
 
 
-
+# In[1]:
 class fc_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
         layer_module_base.__init__(self, params, data_shape, activation_func)
@@ -116,7 +117,7 @@ class fc_layer(layer_module_base):
         return data
  
  
- 
+# In[1]: 
 class pooling_layer(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'maxpool'):
         layer_module_base.__init__(self, params, data_shape, activation_func) 
@@ -141,7 +142,7 @@ class pooling_layer(layer_module_base):
         return [out_h, out_w, depth]            
         
 
-        
+# In[1]:    
 class inception_module(layer_module_base):
     def __init__(self, params, data_shape, activation_func = 'relu'):
         ''' params is a dictionary of the following structure:

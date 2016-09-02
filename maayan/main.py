@@ -7,53 +7,98 @@ Deep Learning - Convolutional Neural Network
 Purpose - classification of [notMNIST](http://yaroslavvb.blogspot.com/2011/09/notmnist-dataset.html).
 ''' 
 
-from __future__ import print_function
+#from __future__ import print_function
 import numpy as np
 from six.moves import cPickle as pickle
 import matplotlib.pyplot as plt
-import inference_graph
+import computation_graph
+import model_training
 import tensorflow as tf
 import utils
+import serializer
 
 
 
-
-def run_all(data_path, params_path):
+# In[1]:
+def run_all(data_path, params_path, save_to_folder=''):
                 
-    hyperparams = load_hyperparams_from_json(params_path) 
+    hyperparams = serializer.load_hyperparams(params_path) 
     data = load_data(hyperparams, data_path)
+    return run_model(hyperparams, data, save_to_folder)
+
+
+def run_all_from_restored(restore_from_folder, data_path, params_path, 
+                          save_to_folder='', override_params = {}):
+                
+    hyperparams = serializer.load_hyperparams(params_path) 
+    data = load_data(hyperparams, data_path)
+    return run_model_from_restored(restore_from_folder, data, save_to_folder, 
+                                   override_params = override_params)
+
+
+# In[1]:
+def run_model(hyperparams, data, save_to_folder):
+    '''data: train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels]'''
     
-    return run_model(hyperparams, data)
-
-
-
-def run_model(hyperparams, data):
-    
-    train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels = data
+    if save_to_folder != '':
+        hyperparams['save_folder'] = save_to_folder
     utils.print_params(hyperparams)
     
     with tf.Graph().as_default(), tf.Session() as session:    
     
         # build graph flow model
-        graph_elements = inference_graph.build_graph(hyperparams, valid_dataset, test_dataset)
+        train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels = data
+        graph = computation_graph.build_graph(hyperparams, valid_dataset, test_dataset)
+        
         # run graph flow model 
-        from model_training import train_model
-        run_res = train_model(session, graph_elements, hyperparams, train_dataset, train_labels, \
-                                                valid_labels, test_labels)       
-        train_accuracy, valid_accuracy, test_accuracy, train_loss = run_res
+        accuracy = model_training.train_model(session, graph, hyperparams, 
+                                              train_dataset, train_labels, valid_labels, test_labels)
            
         # report final results
         print('------Final results-------')
-        print('Final train loss %f' % train_loss)
-        print('Final train utils.accuracy %f, validation utils.accuracy %f' % (train_accuracy, valid_accuracy))         
-        print("Test utils.accuracy: %.12f%%" % test_accuracy)
+        print('Final train accuracy %1.2f, validation accuracy %1.2f %%' % (accuracy[0], accuracy[1]))         
+        print("Test accuracy: %1.2f%%" % accuracy[2])
         
-        return run_res
+        return accuracy
+
+
+def run_model_from_restored(folder, data, save_to_folder='', override_params = {}):
+    '''data: train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels]'''
+    
+    with tf.Graph().as_default(), tf.Session() as session:
+        # restore model and create session
+        train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels = data
+        restored = serializer.restore_model(session, folder, train_dataset, valid_dataset, 
+                                       test_dataset, override_params)
+        if not restored:
+            print('Restore failed')
+            return []
+            
+        graph, hyperparams, last_epoch = restored
+        if save_to_folder != '':
+            hyperparams['save_folder'] = save_to_folder
+
+        # run graph flow model 
+        accuracy = model_training.train_model(session, graph, hyperparams, train_dataset, train_labels, 
+                                              valid_labels, test_labels, start_epoch=last_epoch)
+
+        # report final results
+        print('------Final results-------')
+        print('Final train accuracy %f, validation accuracy %f' % (accuracy[0], accuracy[1]))         
+        print("Test accuracy: %.12f%%" % accuracy[2])
+
+
+    return accuracy
+
+
+def restore_model_and_stop(folder, data):
+    '''data: train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels]'''
+    override_params = {'num_full_epochs' : 0}
+    return run_model_from_restored(folder, data, override_params=override_params)
 
 
 
-
-
+# In[1]:
 def cross_validation_for_param(cv_param_name, cv_param_values, hyperparams, 
                                valid_dataset, test_dataset, valid_labels, test_labels):
     '''Testing model functionality'''
@@ -110,7 +155,7 @@ def cross_validation_for_param(cv_param_name, cv_param_values, hyperparams,
     return [param_val, valid_loss, valid_accuracy]
     
     
-    
+ # In[1]:   
 def load_data(params, dataset_pickle_file = 'notMNIST.pickle'):
 
     with open(dataset_pickle_file, 'rb') as f:
@@ -135,17 +180,18 @@ def load_data(params, dataset_pickle_file = 'notMNIST.pickle'):
         return [train_dataset, train_labels, valid_dataset, valid_labels, valid_dataset, valid_labels] 
 
 
-def load_hyperparams_from_json(path):
-    
-    import json
-    params = None
-    with open(path) as in_f:
-        params = json.load(in_f)
-    return params
-
-
+# In[1]:
 if __name__ == '__main__':
     params_path = '/media/sf_tensorflow_segment/optimal_sett.json'
-    path = '/media/sf_tensorflow_segment/data/notMNIST.pickle'
-    run_all(path, params_path)
+    data_path = '/media/sf_tensorflow_segment/data/notMNIST.pickle'
+    
+    restore_from_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model'
+    save_to_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model1'
+    restore_override_params = {}
+    
+    if restore_from_folder == '':
+        run_all(data_path, params_path)
+    else:
+        run_all_from_restored(restore_from_folder, data_path, params_path, 
+                          save_to_folder, override_params = restore_override_params)       
 

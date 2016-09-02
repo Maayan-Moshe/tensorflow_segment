@@ -77,9 +77,10 @@ def reformat(dataset, labels, params):
     convolutions need the image data formatted as a cube (width by height by #channels)
     labels as float 1-hot encodings.
     '''
-    img_size = params['image_size']
-    num_chan = params['num_channels']
-    dataset = dataset.reshape((-1, img_size, img_size, num_chan)).astype(np.float32)
+    h = params['image_height']
+    w = params['image_width']
+    num_channels = params['num_channels']
+    dataset = dataset.reshape((-1, h, w, num_channels)).astype(np.float32)
     labels = convert_labels_to_onehot_vectors(labels, params['num_labels'])
     return dataset, labels
     
@@ -91,7 +92,14 @@ def convert_labels_to_onehot_vectors(labels, num_labels):
     label_classes = np.arange(num_labels)
     labels = (label_classes == labels[:,None]).astype(np.float32)    
     return labels
-    
+ 
+
+def calc_num_steps_per_epoch(train_data, hyperparams):  
+    # single epoch means a full pass over the whole data
+    # in a single iteration step batch_size of data is processed
+    num_samples = train_data.shape[0]
+    num_steps_per_epoch = num_samples // hyperparams['batch_size']   
+    return num_steps_per_epoch
     
     
 def print_params(hyperparams):
