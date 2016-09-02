@@ -182,12 +182,23 @@ def load_data(params, dataset_pickle_file = 'notMNIST.pickle'):
 
 # In[1]:
 if __name__ == '__main__':
-    params_path = '/media/sf_tensorflow_segment/optimal_sett.json'
-    data_path = '/media/sf_tensorflow_segment/data/notMNIST.pickle'
+    who_am_i = 'dina' # :-)
+    print('*** Hi, I am ', who_am_i)
     
-    restore_from_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model'
-    save_to_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model1'
-    restore_override_params = {}
+    if who_am_i == 'dina':
+        params_path = '/media/sf_tensorflow_segment/params/optimal_sett.json'
+        data_path = '/media/sf_tensorflow_segment/data/notMNIST.pickle'
+        
+        restore_from_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model'
+        save_to_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model1'
+        restore_override_params = {}
+    else:
+        params_path = '/media/sf_teeth_segmentation/params/optimal_sett.json'
+        data_path = '/media/sf_teeth_segmentation/data/notMNIST.pickle'
+        
+        restore_from_folder = ''
+        save_to_folder = ''
+        restore_override_params = {}        
     
     if restore_from_folder == '':
         run_all(data_path, params_path)
