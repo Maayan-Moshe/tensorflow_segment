@@ -7,7 +7,6 @@ Deep Learning - Convolutional Neural Network
 Purpose - classification of [notMNIST](http://yaroslavvb.blogspot.com/2011/09/notmnist-dataset.html).
 ''' 
 
-#from __future__ import print_function
 import numpy as np
 from six.moves import cPickle as pickle
 import matplotlib.pyplot as plt
@@ -17,9 +16,6 @@ import tensorflow as tf
 import utils
 import serializer
 
-
-
-# In[1]:
 def run_all(data_path, params_path, save_to_folder=''):
                 
     hyperparams = serializer.load_hyperparams(params_path) 
@@ -35,8 +31,6 @@ def run_all_from_restored(restore_from_folder, data_path, params_path,
     return run_model_from_restored(restore_from_folder, data, save_to_folder, 
                                    override_params = override_params)
 
-
-# In[1]:
 def run_model(hyperparams, data, save_to_folder):
     '''data: train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels]'''
     
@@ -60,7 +54,6 @@ def run_model(hyperparams, data, save_to_folder):
         print("Test accuracy: %1.2f%%" % accuracy[2])
         
         return accuracy
-
 
 def run_model_from_restored(folder, data, save_to_folder='', override_params = {}):
     '''data: train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels]'''
@@ -96,9 +89,6 @@ def restore_model_and_stop(folder, data):
     override_params = {'num_full_epochs' : 0}
     return run_model_from_restored(folder, data, override_params=override_params)
 
-
-
-# In[1]:
 def cross_validation_for_param(cv_param_name, cv_param_values, hyperparams, 
                                valid_dataset, test_dataset, valid_labels, test_labels):
     '''Testing model functionality'''
@@ -153,9 +143,7 @@ def cross_validation_for_param(cv_param_name, cv_param_values, hyperparams,
     print('train_loss, %f, valid_loss %f' % (train_loss, valid_loss))
     
     return [param_val, valid_loss, valid_accuracy]
-    
-    
- # In[1]:   
+ 
 def load_data(params, dataset_pickle_file = 'notMNIST.pickle'):
 
     with open(dataset_pickle_file, 'rb') as f:
@@ -179,10 +167,8 @@ def load_data(params, dataset_pickle_file = 'notMNIST.pickle'):
         
         return [train_dataset, train_labels, valid_dataset, valid_labels, valid_dataset, valid_labels] 
 
-
-# In[1]:
 if __name__ == '__main__':
-    who_am_i = 'dina' # :-)
+    who_am_i = 'maayan' # :-)
     print('*** Hi, I am ', who_am_i)
     
     if who_am_i == 'dina':
@@ -193,8 +179,8 @@ if __name__ == '__main__':
         save_to_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model1'
         restore_override_params = {}
     else:
-        params_path = '/media/sf_teeth_segmentation/params/optimal_sett.json'
-        data_path = '/media/sf_teeth_segmentation/data/notMNIST.pickle'
+        params_path = '/media/sf_teeth_segmentation/tensorflow_segment/params/optimal_sett.json'
+        data_path = '/media/sf_teeth_segmentation/notMNIST.pickle'
         
         restore_from_folder = ''
         save_to_folder = ''

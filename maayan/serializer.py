@@ -9,9 +9,6 @@ import utils
 import computation_graph
 import tensorflow as tf
 
-
-# In[1]:
-
 def restore_model(session, folder, train_data, validation_data, test_data, override_params = {}):
                       
     print('Restoring model from %s' % folder)
@@ -60,18 +57,13 @@ def save_model(session, saver, hyperparams, global_step=0):
         
     params_path = save_folder + '/' + hyperparams['save_params_file']    
     save_params(hyperparams, params_path)
-
-
-
-# In[1]:
-    
+ 
 def load_hyperparams(path):
     params = None
     with open(path) as in_f:
         params = json.load(in_f)
     return params
-    
-    
+       
 def save_params(hyperparams, save_path):
     f = open(save_path, 'w')
     json.dump(hyperparams, f)

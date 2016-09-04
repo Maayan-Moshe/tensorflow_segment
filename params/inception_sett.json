@@ -1,0 +1,114 @@
+{
+  "image_height": 28,
+  "image_width": 28,
+  "num_channels": 1,  
+  "num_labels": 10,
+  "batch_size": 128,
+  
+  "layers_info": [
+    {
+      "padding": "SAME",
+      "depth": 16,
+      "stride": 1,
+      "kernel_width": 5,
+      "type": "conv"
+    },
+    {
+      "pool_type": "maxpool",
+      "padding": "SAME",
+      "stride": 2,
+      "kernel_width": 2,
+      "type": "pool"
+    },
+    {
+      "padding": "SAME",
+      "depth": 32,
+      "stride": 1,
+      "kernel_width": 5,
+      "type": "conv"
+    },
+    {
+      "1x1": 12,
+      "3x3_reduced": 10,
+      "5x5_reduced": 4,
+      "3x3": 20,
+      "pool_reduced": 6,
+      "5x5": 10,
+      "type": "inception"
+    },
+    {
+      "1x1": 12,
+      "3x3_reduced": 12,
+      "5x5_reduced": 4,
+      "3x3": 24,
+      "pool_reduced": 8,
+      "5x5": 12,
+      "type": "inception"
+    },
+    {
+      "pool_type": "maxpool",
+      "padding": "SAME",
+      "stride": 2,
+      "kernel_width": 2,
+      "type": "pool"
+    },
+    {
+      "1x1": 16,
+      "3x3_reduced": 14,
+      "5x5_reduced": 4,
+      "3x3": 28,
+      "pool_reduced": 8,
+      "5x5": 12,
+      "type": "inception"
+    },
+    {
+      "1x1": 24,
+      "3x3_reduced": 20,
+      "5x5_reduced": 12,
+      "3x3": 40,
+      "pool_reduced": 12,
+      "5x5": 20,
+      "type": "inception"
+    },
+    {
+      "1x1": 32,
+      "3x3_reduced": 20,
+      "5x5_reduced": 16,
+      "3x3": 56,
+      "pool_reduced": 16,
+      "5x5": 24,
+      "type": "inception"
+    },
+    {
+      "pool_type": "avgpool",
+      "padding": "VALID",
+      "stride": 1,
+      "kernel_width": 7,
+      "type": "pool"
+    },
+    {
+      "depth": 10,
+      "type": "fc"
+    }
+  ],
+  
+  "num_full_epochs" : 20,
+  "num_steps": 50001,
+  "num_evaluations_per_epoch": 100,  
+  
+  "weight_stddev": -1,
+  "bias_init_val": 0.01,
+  
+  "learning_rate": 0.1,
+  "learning_decay_rate": 0.95,
+  "learning_decay_steps": 1000,
+  "momentum_term": 0.8,
+  "optimizer_alg_name": "GradientDescentOptimizer", 
+  
+  "activation_func": "elu",
+  "dropout_keep_prob": 0.7,
+  
+  "save_folder": "save_restore/inception_save_model",
+  "save_model_file": "model.ckpt",
+  "save_params_file": "hyperparams.json"  
+}

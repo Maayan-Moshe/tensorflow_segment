@@ -4,9 +4,6 @@ import utils
 import math
 import serializer
 
-
-# In[1]:
-
 def train_model(session, graph, hyperparams, 
                 train_dataset, train_labels, 
                 validation_labels, test_labels, start_epoch=0):
@@ -16,9 +13,7 @@ def train_model(session, graph, hyperparams,
     test_accuracy = trainer.eval_test_accuracy(test_labels)
         
     return [train_accuracy, validation_accuracy, test_accuracy]
-
-# In[1]:
-
+    
 class ModelTrainer:
     
     def __init__(self, session, graph, hyperparams, validation_labels):                               
@@ -26,8 +21,7 @@ class ModelTrainer:
         self.graph = graph                         
         self.hyperparams = hyperparams
         self.validation_labels = validation_labels
-         
-# In[1]:     
+    
     def train_all(self, train_dataset, train_labels, start_epoch=0):  
         t0 = time.time()
         
@@ -111,8 +105,7 @@ class ModelTrainer:
         serializer.save_model(self.session, self.graph.saver, self.hyperparams, global_step)
         
         return True
-                         
-# In[1]:          
+         
     def eval_test_accuracy(self, test_labels):
         return self.__eval_accuracy(self.graph.test_prediction, test_labels)
         
@@ -122,8 +115,7 @@ class ModelTrainer:
         prediction = tf_prediction.eval(feed_dict = feed_dict)
         accuracy = utils.accuracy(prediction, labels)
         return accuracy        
-        
-# In[1]:    
+
     def visualize_learning_curves(self):
         import matplotlib.pyplot as plt
         
@@ -143,8 +135,7 @@ class ModelTrainer:
             plt.legend(loc = 'best')
             plt.title('Train/validation utils.accuracy, final train_accuracy %f valid_accuracy %f' % 
                                     (self.train_accuracy_list[-1], self.validation_accuracy_list[-1]))
-                                    
-# In[1]:                                      
+                              
     def __set_epoch_num_steps(self, train_dataset):     
         # single epoch means a full pass over the whole data
         # in a single iteration step batch_size of data is processed

@@ -6,15 +6,10 @@ Created on Wed Aug 31 15:08:18 2016
 
 import tensorflow as tf
 
-# In[1]
-
 def build_graph(hyperparams, valid_dataset, test_dataset):
     graph = ComputationalGraph(hyperparams)
     graph.build_graph(valid_dataset, test_dataset)
     return graph
-
-
-# In[1]:
 
 class ComputationalGraph:
     '''
@@ -32,8 +27,6 @@ class ComputationalGraph:
         self.tf_train_labels = tf.placeholder(tf.float32, shape=(batch_size, hyperparams['num_labels'] ))
         self.tf_dropout_keep_prob = tf.placeholder(tf.float32)  
         
-
-    # In[1]:  
     def build_graph(self, valid_dataset, test_dataset):
         tf_valid_dataset = tf.constant(valid_dataset)
         tf_test_dataset = tf.constant(test_dataset)             
@@ -56,8 +49,7 @@ class ComputationalGraph:
         # Properly initialize all graph variables in existing session.
         tf.initialize_all_variables().run()      
         print("\nSession Initialized")  
-        
-      
+              
     def build_network_layers(self):
         self.layers_objects = []
            
@@ -95,8 +87,6 @@ class ComputationalGraph:
         print('Total parameters number = %d' % total_params_count)
         return self.layers_objects
         
-
-    # In[1]:
     def add_optimizer(self, train_logits, tf_train_labels):
         learning_rate = self.hyperparams['learning_rate']
         learning_decay_steps = self.hyperparams['learning_decay_steps']
@@ -131,9 +121,6 @@ class ComputationalGraph:
     
         self.optimizer = self.optimizer.minimize(self.loss, global_step=self.global_step) 
             
-            
-            
-    # In[1]:    
     def forward_prop(self, dataset):   
         num_layers = len(self.layers_objects)
         assert(num_layers > 0)
@@ -147,5 +134,3 @@ class ComputationalGraph:
     def predict(self, logits):
         prediction = tf.nn.softmax(logits)
         return prediction
-        
- # In[1]: 
