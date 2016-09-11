@@ -43,8 +43,6 @@ def restore_model(session, folder, train_data, validation_data, test_data, overr
     
     return [graph, hyperparams, last_epoch]
 
-
-
 def save_model(session, saver, hyperparams, global_step=0):
     print('Saving model and parameters')
     save_folder = hyperparams['save_folder']

@@ -83,7 +83,6 @@ def run_model_from_restored(folder, data, save_to_folder='', override_params = {
 
     return accuracy
 
-
 def restore_model_and_stop(folder, data):
     '''data: train_dataset, train_labels, valid_dataset, valid_labels, test_dataset, test_labels]'''
     override_params = {'num_full_epochs' : 0}

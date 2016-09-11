@@ -32,7 +32,7 @@ class ComputationalGraph:
         tf_test_dataset = tf.constant(test_dataset)             
         
         # add layers weight/biases variables
-        self.layers_objects = self.build_network_layers()     
+        self.__build_network_layers()     
     
         # Optimisation --------------------------------------   
         self.train_logits = self.forward_prop(self.tf_train_dataset)
@@ -50,7 +50,7 @@ class ComputationalGraph:
         tf.initialize_all_variables().run()      
         print("\nSession Initialized")  
               
-    def build_network_layers(self):
+    def __build_network_layers(self):
         self.layers_objects = []
            
         layers_info = self.hyperparams['layers_info']
@@ -85,7 +85,6 @@ class ComputationalGraph:
         
         print('Total layers %d' % num_layers)
         print('Total parameters number = %d' % total_params_count)
-        return self.layers_objects
         
     def add_optimizer(self, train_logits, tf_train_labels):
         learning_rate = self.hyperparams['learning_rate']
@@ -105,7 +104,7 @@ class ComputationalGraph:
             (optimizer_alg_name == 'GradientDescentOptimizer' or optimizer_alg_name == 'MomentumOptimizer')) :
             learning_rate = tf.train.exponential_decay(learning_rate, self.global_step, 
                                                        learning_decay_steps, 
-                                                       learning_decay_rate, staircase=True)  
+                                                       learning_decay_rate, staircase=True) 
             
         if optimizer_alg_name == 'GradientDescentOptimizer':
             self.optimizer = tf.train.GradientDescentOptimizer(learning_rate)
