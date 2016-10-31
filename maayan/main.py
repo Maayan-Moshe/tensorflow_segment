@@ -171,15 +171,15 @@ if __name__ == '__main__':
     print('*** Hi, I am ', who_am_i)
     
     if who_am_i == 'dina':
-        params_path = '/media/sf_tensorflow_segment/params/optimal_sett.json'
-        data_path = '/media/sf_tensorflow_segment/data/notMNIST.pickle'
+        params_path = '/home/maayan/gitrep/tensorflow_segment/params/optimal_sett.json'
+        data_path = '/home/maayan/Documents/teeth_segmentation/notMNIST.pickle'
         
-        restore_from_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model'
-        save_to_folder = '/media/sf_tensorflow_segment/save_restore/opt_save_model1'
+        restore_from_folder = '/home/maayan/gitrep/sf_tensorflow_segment/save_restore/opt_save_model'
+        save_to_folder = '/home/maayan/gitrep/sf_tensorflow_segment/save_restore/opt_save_model1'
         restore_override_params = {}
     else:
-        params_path = '/media/sf_teeth_segmentation/tensorflow_segment/params/optimal_sett.json'
-        data_path = '/media/sf_teeth_segmentation/notMNIST.pickle'
+        params_path = '/home/maayan/gitrep/tensorflow_segment/params/optimal_sett.json'
+        data_path = '/home/maayan/Documents/teeth_segmentation/notMNIST.pickle'
         
         restore_from_folder = ''
         save_to_folder = ''
